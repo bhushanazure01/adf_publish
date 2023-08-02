@@ -44,6 +44,119 @@
 					"referenceName": "LS_AZURE_SQL_DB",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "GET_MAX_WM_VALUE",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "START_LOGGING",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select max(updatedate) from students",
+						"queryTimeout": "00:05:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_STUDENT",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "GET_CURRENT_WM_VALUE",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "START_LOGGING",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "GET_STUDENT_DATA",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "GET_MAX_WM_VALUE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "GET_CURRENT_WM_VALUE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from students where updatedate >= @activity('GET_CURRENT_WM_VALUE').output.firstRow.value   and   updatedate <= @activity('GET_MAX_WM_VALUE').output.firstRow.value",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_STUDENT",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "GET_STUDENT_DATA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
 			}
 		],
 		"annotations": []

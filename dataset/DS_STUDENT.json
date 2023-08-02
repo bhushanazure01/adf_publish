@@ -1,0 +1,30 @@
+{
+	"name": "DS_STUDENT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AZURE_SQL_DB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "studentid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "studentname",
+				"type": "varchar"
+			},
+			{
+				"name": "updatedate",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "students"
+		}
+	}
+}
