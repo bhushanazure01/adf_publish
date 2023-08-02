@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "azure-datafactory-20230802"
+		},
+		"LS_AZURE_SQL_DB_connectionString": {
+			"value": ""
+		},
+		"LS_ADLSGEN2_TEG_accountKey": {
+			"value": ""
+		},
+		"LS_ADLSGEN2_TEG_properties_typeProperties_url": {
+			"value": "https://adlsgen2acc20230802.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
